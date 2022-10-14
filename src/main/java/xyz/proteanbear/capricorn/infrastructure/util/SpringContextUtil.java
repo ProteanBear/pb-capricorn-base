@@ -5,6 +5,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
+import java.lang.annotation.Annotation;
+import java.util.Map;
+
 /**
  * <p>基础层：Spring上下文环境工具类，可用于获取指定Bean</p>
  *
@@ -51,5 +54,13 @@ public class SpringContextUtil implements ApplicationContextAware {
      */
     public static <T> T getBean(String name, Class<T> clazz) {
         return getApplicationContext().getBean(name, clazz);
+    }
+
+    /**
+     * @param clazz 指定类
+     * @return 通过注解获取Bean
+     */
+    public static Map<String, ?> getBeansWithAnnotation(Class<? extends Annotation> clazz) {
+        return getApplicationContext().getBeansWithAnnotation(clazz);
     }
 }

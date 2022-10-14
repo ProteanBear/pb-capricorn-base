@@ -96,6 +96,7 @@ public class Authority {
         /**
          * 获取当前账号接口实现类
          */
+        @SuppressWarnings("unchecked")
         default <T> T getBean(Class<T> toClass)
         {
             return this.getClass().isAssignableFrom(toClass)?((T)this):null;
