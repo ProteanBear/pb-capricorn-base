@@ -163,5 +163,13 @@ public class PersonnelIdCardUtil {
         public int getGender() {
             return gender;
         }
+
+        public boolean isMan() {
+            return gender == 1;
+        }
+
+        public boolean isWomen() {
+            return gender == 0;
+        }
     }
 }
