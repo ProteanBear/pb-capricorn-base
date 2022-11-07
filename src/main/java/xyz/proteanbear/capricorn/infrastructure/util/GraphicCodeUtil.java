@@ -1,9 +1,6 @@
 package xyz.proteanbear.capricorn.infrastructure.util;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.EncodeHintType;
-import com.google.zxing.Writer;
-import com.google.zxing.WriterException;
+import com.google.zxing.*;
 import com.google.zxing.aztec.AztecWriter;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
@@ -17,27 +14,37 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
 /**
- * 工具类：条形码生成和识别工具
+ * 工具类：图形码生成和识别工具
  */
-public class BarCodeUtil {
+public class GraphicCodeUtil {
     /**
      * 将指定的号码生成条形码（使用默认配置）
      *
      * @param number 号码内容
      * @return 图片缓存
      */
-    public static BufferedImage generate(String number) throws WriterException {
-        return generate(number, configurationDefault);
+    public static BufferedImage barcode(String number) throws WriterException {
+        return generate(number, Configuration.barcodeDefaultConf());
+    }
+
+    /**
+     * 将指定的内容生成二维码（使用默认配置）
+     *
+     * @param content 二维码内容
+     * @return 图片缓存
+     */
+    public static BufferedImage qrcode(String content) throws WriterException {
+        return generate(content, Configuration.qrcodeDefaultConf());
     }
 
     /**
      * 将指定的号码生成条形码（指定配置）
      *
-     * @param number        号码内容
+     * @param content       内容
      * @param configuration 配置项
      * @return 图片缓存
      */
-    public static BufferedImage generate(String number, Configuration configuration) throws WriterException {
+    public static BufferedImage generate(String content, Configuration configuration) throws WriterException {
         //更加配置选择生成器
         Writer writer = null;
         BarcodeFormat format = configuration.getBarcodeFormat();
@@ -52,10 +59,11 @@ public class BarCodeUtil {
             case EAN_13 -> writer = new EAN13Writer();
             case ITF -> writer = new ITFWriter();
             case PDF_417 -> writer = new PDF417Writer();
+            case QR_CODE -> writer = new MultiFormatWriter();
             default -> throw new WriterException();
         }
         BitMatrix bitMatrix = writer.encode(
-                number, format,
+                content, format,
                 configuration.getWidth(), configuration.getHeight(),
                 new HashMap<>() {{
                     put(EncodeHintType.CHARACTER_SET, configuration.getCharacterSet());
@@ -91,7 +99,7 @@ public class BarCodeUtil {
         //绘制条形码
         graphics.drawImage(barcode, 0, configuration.getMargin(), barcode.getWidth(), barcode.getHeight(), null);
         //绘制号码内容
-        drawText(graphics, number, configuration.getMargin() * 3 + barcode.getHeight(), configuration);
+        drawText(graphics, content, configuration.getMargin() * 2 + barcode.getHeight() + 10, configuration);
         graphics.dispose();
         outImage.flush();
         return outImage;
@@ -131,10 +139,24 @@ public class BarCodeUtil {
      */
     public static class Configuration {
         /**
-         * 默认配置
+         * 默认配置（条形码）
          */
-        public static Configuration defaultConf() {
-            return new Configuration();
+        public static Configuration barcodeDefaultConf() {
+            return new Configuration()
+                    .setBarcodeFormat(BarcodeFormat.CODE_128)
+                    ;
+        }
+
+        /**
+         * 默认配置（二维码）
+         */
+        public static Configuration qrcodeDefaultConf() {
+            return new Configuration()
+                    .setWidth(500)
+                    .setHeight(500)
+                    .setBarcodeFormat(BarcodeFormat.QR_CODE)
+                    .setMargin(2)
+                    ;
         }
 
         /**
@@ -175,7 +197,7 @@ public class BarCodeUtil {
         /**
          * 边距
          */
-        private int margin = 10;
+        private int margin = 5;
 
         /**
          * 是否显示条形码码号
@@ -273,9 +295,4 @@ public class BarCodeUtil {
             return this;
         }
     }
-
-    /**
-     * 默认配置项
-     */
-    public static final Configuration configurationDefault = Configuration.defaultConf();
 }
