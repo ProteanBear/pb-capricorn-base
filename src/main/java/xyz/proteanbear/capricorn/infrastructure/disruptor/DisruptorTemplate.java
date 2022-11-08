@@ -1,5 +1,7 @@
 package xyz.proteanbear.capricorn.infrastructure.disruptor;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lmax.disruptor.*;
 import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.dsl.ProducerType;
@@ -47,7 +49,7 @@ public class DisruptorTemplate {
         /**
          * 传递消息事件的数据
          */
-        private Object data;
+        private String data;
 
         public String getTopic() {
             return topic;
@@ -57,16 +59,18 @@ public class DisruptorTemplate {
             this.topic = topic;
         }
 
-        public Object getData() {
+        public String getData() {
             return data;
         }
 
-        @SuppressWarnings("unchecked")
-        public <T> T getData(Class<T> clazz) {
-            return this.getClass().isAssignableFrom(clazz) ? ((T) this) : null;
+        public <T> Optional<T> getData(Class<T> clazz) throws JsonProcessingException {
+            ObjectMapper objectMapper=new ObjectMapper();
+            return data != null && !data.isBlank()
+                    ? Optional.of(objectMapper.readValue(data, clazz))
+                    : Optional.empty();
         }
 
-        public void setData(Object data) {
+        public void setData(String data) {
             this.data = data;
         }
     }
@@ -88,7 +92,7 @@ public class DisruptorTemplate {
         /**
          * 接收数据
          */
-        <T> void onReceive(T data);
+        void onReceive(TopicEvent event);
     }
 
     /**
@@ -120,7 +124,7 @@ public class DisruptorTemplate {
     /**
      * 发布者事件转换器
      */
-    private EventTranslatorTwoArg<TopicEvent, String, Object> translator;
+    private EventTranslatorTwoArg<TopicEvent, String, String> translator;
 
     /**
      * 创建新的消息总线处理
@@ -147,7 +151,7 @@ public class DisruptorTemplate {
         disruptor.handleEventsWith((topicEvent, sequence, endOfBatch) -> {
             if (!topicHandlerMap.containsKey(topicEvent.getTopic())) return;
             topicHandlerMap.getOrDefault(topicEvent.getTopic(), List.of())
-                    .forEach(handler -> handler.onReceive(topicEvent.getData()));
+                    .forEach(handler -> handler.onReceive(topicEvent));
         });
         //开启
         logger.info("Disruptor Message Queue is starting.");
@@ -163,10 +167,11 @@ public class DisruptorTemplate {
     /**
      * 事件发布
      */
-    public <T> void publish(String topic, T data) {
+    public <T> void publish(String topic, T data) throws JsonProcessingException {
         if (this.disruptor == null) return;
         RingBuffer<TopicEvent> ringBuffer = disruptor.getRingBuffer();
-        ringBuffer.publishEvent(translator, topic, data);
+        ObjectMapper objectMapper=new ObjectMapper();
+        ringBuffer.publishEvent(translator, topic, objectMapper.writeValueAsString(data));
     }
 
     /**

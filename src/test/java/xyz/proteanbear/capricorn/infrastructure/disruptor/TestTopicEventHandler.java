@@ -6,7 +6,14 @@ package xyz.proteanbear.capricorn.infrastructure.disruptor;
 @DisruptorTemplate.DataHandlerTopic("TEST_TOPIC_EVENT")
 public class TestTopicEventHandler implements DisruptorTemplate.DataHandler {
     @Override
-    public <T> void onReceive(T data) {
-        System.out.println("话题「TEST_TOPIC_EVENT」消费内容："+data);
+    public void onReceive(DisruptorTemplate.TopicEvent event) {
+        ReceiveTestEvent data;
+        try {
+            data = event.getData(ReceiveTestEvent.class)
+                    .orElseThrow(Exception::new);
+            System.out.println("话题「TEST_TOPIC_EVENT」消费内容：" + data.getContent());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
