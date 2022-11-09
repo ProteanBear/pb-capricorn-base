@@ -2,17 +2,22 @@ package xyz.proteanbear.capricorn.infrastructure.disruptor;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lmax.disruptor.*;
+import com.lmax.disruptor.EventFactory;
+import com.lmax.disruptor.EventTranslatorTwoArg;
+import com.lmax.disruptor.RingBuffer;
+import com.lmax.disruptor.YieldingWaitStrategy;
 import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.dsl.ProducerType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 import org.springframework.stereotype.Component;
-import xyz.proteanbear.capricorn.infrastructure.util.SpringContextUtil;
 
 import javax.annotation.PostConstruct;
 import java.lang.annotation.*;
@@ -26,7 +31,7 @@ import java.util.*;
 @Component
 @Scope("singleton")
 @Lazy
-public class DisruptorTemplate {
+public class DisruptorTemplate implements ApplicationContextAware {
     /**
      * 默认缓存区大小
      */
@@ -104,6 +109,11 @@ public class DisruptorTemplate {
     public @interface DataHandlerTopic {
         String value();
     }
+
+    /**
+     * Spring上下文
+     */
+    private ApplicationContext applicationContext;
 
     /**
      * 当前的消息队列
@@ -190,11 +200,11 @@ public class DisruptorTemplate {
      * @return 返回此次登记的消费者数量
      */
     private int loadProcessors() {
-        if (SpringContextUtil.getApplicationContext() == null) return 0;
+        if (applicationContext == null) return 0;
         //从Spring上下文中获取使用消费者注解的组件
-        Map<String, ?> handlerObjectMap = SpringContextUtil.getBeansWithAnnotation(DataHandlerTopic.class);
+        Map<String, ?> handlerObjectMap = applicationContext.getBeansWithAnnotation(DataHandlerTopic.class);
         for (Map.Entry<String, ?> stringEntry : handlerObjectMap.entrySet()) {
-            DataHandlerTopic handlerTopic = SpringContextUtil.getApplicationContext()
+            DataHandlerTopic handlerTopic = applicationContext
                     .findAnnotationOnBean(stringEntry.getKey(), DataHandlerTopic.class);
             if (handlerTopic == null) continue;
             Object handlerObject = stringEntry.getValue();
@@ -206,5 +216,10 @@ public class DisruptorTemplate {
             }
         }
         return handlerObjectMap.values().size();
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext=applicationContext;
     }
 }

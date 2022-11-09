@@ -1,11 +1,11 @@
 package xyz.proteanbear.capricorn.infrastructure;
 
 /**
- * <p>基础设施：通用领域事件基类</p>
+ * <p>基础设施：通用领域事件基类（接收）</p>
  *
  * @author 马强
  */
-public class DomainEvent<T> {
+public class DomainReceiveEvent<T> {
     /**
      * 事件唯一标识
      */
@@ -29,34 +29,48 @@ public class DomainEvent<T> {
     /**
      * 传递数据
      */
-    private final T data;
+    private T data;
 
-    public DomainEvent(T data) {
-        this.data = data;
-    }
-
-    public DomainEvent(String source, T data) {
-        this.source = source;
-        this.data = data;
+    public DomainReceiveEvent() {
     }
 
     public String getId() {
         return id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getSource() {
         return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 
     public String getTopic() {
         return topic;
     }
 
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
+
     public long getTimestamp() {
         return timestamp;
     }
 
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
     public T getData() {
         return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
     }
 }
