@@ -35,7 +35,7 @@ public class GraphicCodeUtilTest {
         GraphicCodeUtil.Configuration configuration = GraphicCodeUtil.Configuration.barcodeDefaultConf()
                 .setDisplayCode(true);
         ImageIO.write(
-                GraphicCodeUtil.generate("2110906407", configuration),
+                GraphicCodeUtil.generate("0123456789", configuration),
                 "png", outImageFile
         );
     }

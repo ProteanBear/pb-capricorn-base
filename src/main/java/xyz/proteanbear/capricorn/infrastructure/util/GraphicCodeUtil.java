@@ -84,6 +84,21 @@ public class GraphicCodeUtil {
                 BufferedImage.TYPE_INT_BGR
         );
         //使用画布
+        Graphics2D graphics = whiteGraphics(outImage, imageHeight, configuration);
+        //绘制条形码
+        graphics.drawImage(barcode, 0, configuration.getMargin(), barcode.getWidth(), barcode.getHeight(), null);
+        //绘制号码内容
+        drawText(graphics, content, configuration.getMargin() * 2 + barcode.getHeight() + 10, configuration);
+        graphics.dispose();
+        outImage.flush();
+        return outImage;
+    }
+
+    /**
+     * 设置为白色画布
+     */
+    public static Graphics2D whiteGraphics(BufferedImage outImage, int toHeight, Configuration configuration) {
+        //使用画布
         Graphics2D graphics = outImage.createGraphics();
         //抗锯齿
         graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -94,15 +109,9 @@ public class GraphicCodeUtil {
         graphics.setColor(Color.WHITE);
         graphics.fillRect(0, 0,
                 configuration.getWidth() + configuration.getMargin() * 2,
-                imageHeight + configuration.getMargin() * 2
+                toHeight + configuration.getMargin() * 2
         );
-        //绘制条形码
-        graphics.drawImage(barcode, 0, configuration.getMargin(), barcode.getWidth(), barcode.getHeight(), null);
-        //绘制号码内容
-        drawText(graphics, content, configuration.getMargin() * 2 + barcode.getHeight() + 10, configuration);
-        graphics.dispose();
-        outImage.flush();
-        return outImage;
+        return graphics;
     }
 
     /**
@@ -182,7 +191,7 @@ public class GraphicCodeUtil {
         /**
          * 文字行高度
          */
-        private int wordLineHeight = 30;
+        private int wordLineHeight = 16;
 
         /**
          * 文字编码
