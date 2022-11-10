@@ -1,5 +1,6 @@
 package xyz.proteanbear.capricorn.infrastructure;
 
+import org.springframework.core.io.Resource;
 import xyz.proteanbear.capricorn.infrastructure.auth.AccountAuthorityVerifier;
 import xyz.proteanbear.capricorn.infrastructure.auth.Authority;
 import xyz.proteanbear.capricorn.infrastructure.util.ClassAndObjectUtil;
@@ -110,6 +111,11 @@ public abstract class GlobalResponseHandler implements ResponseBodyAdvice<Object
             if (authoritySetting != null && authoritySetting.autoRemove()) {
                 Objects.requireNonNull(accountHandler).remove(request, response);
             }
+        }
+
+        //ResourceEntity
+        if(data instanceof Resource){
+            return data;
         }
 
         //Has not been packaged
