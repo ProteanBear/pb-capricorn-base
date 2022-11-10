@@ -153,6 +153,7 @@ public class GraphicCodeUtil {
         public static Configuration barcodeDefaultConf() {
             return new Configuration()
                     .setBarcodeFormat(BarcodeFormat.CODE_128)
+                    .setDisplayCode(true)
                     ;
         }
 
