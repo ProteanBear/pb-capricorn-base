@@ -88,7 +88,7 @@ public class GraphicCodeUtil {
         //绘制条形码
         graphics.drawImage(barcode, 0, configuration.getMargin(), barcode.getWidth(), barcode.getHeight(), null);
         //绘制号码内容
-        drawText(graphics, content, configuration.getMargin() * 2 + barcode.getHeight() + 10, configuration);
+        drawText(graphics, content, configuration.getMargin() * 4 + barcode.getHeight(), configuration);
         graphics.dispose();
         outImage.flush();
         return outImage;
@@ -111,6 +111,7 @@ public class GraphicCodeUtil {
                 configuration.getWidth() + configuration.getMargin() * 2,
                 toHeight + configuration.getMargin() * 2
         );
+        graphics.setFont(configuration.getTextFont());
         return graphics;
     }
 
