@@ -35,7 +35,7 @@ public class DisruptorTemplate implements ApplicationContextAware {
     /**
      * 默认缓存区大小
      */
-    private static final int defaultBufferSize = 512;
+    private static final int defaultBufferSize = 1024;
 
     /**
      * 日志
