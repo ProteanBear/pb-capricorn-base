@@ -15,7 +15,7 @@ public class PageResponseDefault {
      * @param pageData 分页数据
      */
     public static PageResponseDefault success(String message, Page<? extends Object> pageData) {
-        PageResponseDefault result=new PageResponseDefault();
+        PageResponseDefault result = new PageResponseDefault();
         result.setStatus("SUCCESS");
         result.setMessage(message);
         result.setData(pageData.getContent());
@@ -129,7 +129,7 @@ public class PageResponseDefault {
          */
         public static Pagination of(Page<? extends Object> page) {
             Pagination pagination = new Pagination();
-            pagination.setPage(page.getNumber());
+            pagination.setPage(page.getNumber() + 1);
             pagination.setSize(page.getSize());
             pagination.setTotal(page.getTotalElements());
             pagination.setTotalPages(page.getTotalPages());
