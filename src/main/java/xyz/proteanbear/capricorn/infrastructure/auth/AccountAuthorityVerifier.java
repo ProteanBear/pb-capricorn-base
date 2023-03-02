@@ -71,9 +71,9 @@ public class AccountAuthorityVerifier implements HandlerInterceptor {
         boolean result = publicRestful;
 
         //check handler
+        logger.info("Request URI:"+request.getRequestURI());
         if (!(handler instanceof HandlerMethod method)) {
             logger.warn("Handler object is not HandlerMethod!");
-            logger.warn("Request URI:"+request.getRequestURI());
             return result;
         }
 
