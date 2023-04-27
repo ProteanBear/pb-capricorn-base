@@ -1,15 +1,14 @@
 package xyz.proteanbear.capricorn.infrastructure;
 
-import org.springframework.core.io.Resource;
-import xyz.proteanbear.capricorn.infrastructure.auth.AccountAuthorityVerifier;
-import xyz.proteanbear.capricorn.infrastructure.auth.Authority;
-import xyz.proteanbear.capricorn.infrastructure.util.ClassAndObjectUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
@@ -17,9 +16,10 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
+import xyz.proteanbear.capricorn.infrastructure.auth.AccountAuthorityVerifier;
+import xyz.proteanbear.capricorn.infrastructure.auth.Authority;
+import xyz.proteanbear.capricorn.infrastructure.util.ClassAndObjectUtil;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Objects;
 
 /**
@@ -101,7 +101,7 @@ public abstract class GlobalResponseHandler implements ResponseBodyAdvice<Object
                     logger.warn("Return data is not a instance of the class Authority.Account!Data is not stored!");
                 } else {
                     Object loginAttribute = request.getAttribute(AccountAuthorityVerifier.ATTRIBUTE_IS_LOGIN);
-                    if (loginAttribute==null|| !Boolean.parseBoolean(loginAttribute.toString())) {
+                    if (loginAttribute == null || !Boolean.parseBoolean(loginAttribute.toString())) {
                         accountHandler.store(response, (Authority.Account) data);
                     }
                 }
@@ -114,7 +114,7 @@ public abstract class GlobalResponseHandler implements ResponseBodyAdvice<Object
         }
 
         //ResourceEntity
-        if(data instanceof Resource){
+        if (data instanceof Resource) {
             return data;
         }
 

@@ -1,6 +1,7 @@
 package xyz.proteanbear.capricorn.infrastructure.util;
 
-import javax.servlet.ServletRequest;
+import jakarta.servlet.ServletRequest;
+
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;

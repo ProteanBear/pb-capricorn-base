@@ -1,10 +1,10 @@
 package xyz.proteanbear.capricorn.infrastructure.util;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import xyz.proteanbear.capricorn.infrastructure.constant.Constants;
 
-import javax.servlet.http.HttpServletRequest;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -32,7 +32,7 @@ public class HttpHeaderUtil {
     /**
      * 生成文件输出时的返回格式
      */
-    public static MediaType contentType(HttpServletRequest request,String filePath){
+    public static MediaType contentType(HttpServletRequest request, String filePath){
         return MediaType.parseMediaType(
                 Optional.ofNullable(filePath)
                         .map(path -> request.getServletContext().getMimeType(path))

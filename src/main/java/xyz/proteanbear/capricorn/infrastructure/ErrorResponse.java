@@ -1,8 +1,8 @@
 package xyz.proteanbear.capricorn.infrastructure;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 
 /**

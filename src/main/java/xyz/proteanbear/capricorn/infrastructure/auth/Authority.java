@@ -1,7 +1,8 @@
 package xyz.proteanbear.capricorn.infrastructure.auth;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.Serializable;
 import java.lang.annotation.*;
 import java.util.UUID;
@@ -15,12 +16,11 @@ public class Authority {
     /**
      * <p>权限设置注解，用于Controller的方法上</p>
      */
-    @Target({ElementType.METHOD,ElementType.TYPE})
+    @Target({ElementType.METHOD, ElementType.TYPE})
     @Retention(RetentionPolicy.RUNTIME)
     @Documented
     @Inherited
-    public @interface Set
-    {
+    public @interface Set {
         /**
          * 错误信息
          */
@@ -73,33 +73,29 @@ public class Authority {
     /**
      * 账户类接口，默认实现；并可序列化
      */
-    public interface Account extends Serializable
-    {
+    public interface Account extends Serializable {
         /**
          * 检查账户配置是否通过鉴权，通过鉴权即可以使用对应的接口
          *
          * @param accountAuthKey 账户鉴权标识
          */
-        default boolean ok(String accountAuthKey)
-        {
+        default boolean ok(String accountAuthKey) {
             return true;
         }
 
         /**
          * 自定义Token实现方法，默认使用UUID。
          */
-        default String customToken()
-        {
-            return String.valueOf(UUID.randomUUID()).replaceAll("-","");
+        default String customToken() {
+            return String.valueOf(UUID.randomUUID()).replaceAll("-", "");
         }
 
         /**
          * 获取当前账号接口实现类
          */
         @SuppressWarnings("unchecked")
-        default <T> T getBean(Class<T> toClass)
-        {
-            return this.getClass().isAssignableFrom(toClass)?((T)this):null;
+        default <T> T getBean(Class<T> toClass) {
+            return this.getClass().isAssignableFrom(toClass) ? ((T) this) : null;
         }
 
         /**
@@ -111,8 +107,7 @@ public class Authority {
     /**
      * 账户处理器接口
      */
-    public interface AccountHandler
-    {
+    public interface AccountHandler {
         /**
          * Get the account object through web request
          *
@@ -128,7 +123,7 @@ public class Authority {
          * @param forClass  class name
          * @return current account object
          */
-        Account get(String fromToken,String forClass);
+        Account get(String fromToken, String forClass);
 
         /**
          * @param request web request
@@ -156,6 +151,6 @@ public class Authority {
          * @param request  web request
          * @param response response
          */
-        void remove(HttpServletRequest request,HttpServletResponse response);
+        void remove(HttpServletRequest request, HttpServletResponse response);
     }
 }

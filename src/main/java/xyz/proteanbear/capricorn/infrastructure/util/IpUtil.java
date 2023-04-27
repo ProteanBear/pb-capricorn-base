@@ -1,6 +1,6 @@
 package xyz.proteanbear.capricorn.infrastructure.util;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * 工具类：请求IP地址获取

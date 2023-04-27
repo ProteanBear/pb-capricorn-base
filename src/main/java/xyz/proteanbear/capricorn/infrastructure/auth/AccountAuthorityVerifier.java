@@ -1,5 +1,7 @@
 package xyz.proteanbear.capricorn.infrastructure.auth;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import xyz.proteanbear.capricorn.infrastructure.util.ClassAndObjectUtil;
 import xyz.proteanbear.capricorn.infrastructure.util.RequestEditUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -12,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
