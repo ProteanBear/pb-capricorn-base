@@ -7,6 +7,7 @@ package xyz.proteanbear.capricorn.infrastructure.constant;
  */
 public class RegularExpression {
     public static final String Account="^[a-zA-Z0-9_-]{4,16}$";
+    public static final String AccountLarge="^[a-zA-Z0-9_-]{4,32}$";
     public static final String PersonName="^(([\u4E00-\u9FA5]|[a-zA-Z]){1})([\u4E00-\u9FA5·]{0,11}|[a-zA-Z\\s]{0,31})$";
     public static final String Password="^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z\\W]{6,18}$";
     public static final String Date="^(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)$";
