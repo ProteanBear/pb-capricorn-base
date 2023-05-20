@@ -1,11 +1,9 @@
 package xyz.proteanbear.capricorn.infrastructure.auth;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import xyz.proteanbear.capricorn.infrastructure.util.ClassAndObjectUtil;
-import xyz.proteanbear.capricorn.infrastructure.util.RequestEditUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
@@ -13,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
+import xyz.proteanbear.capricorn.infrastructure.util.ClassAndObjectUtil;
+import xyz.proteanbear.capricorn.infrastructure.util.RequestEditUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,7 +71,7 @@ public class AccountAuthorityVerifier implements HandlerInterceptor {
         boolean result = publicRestful;
 
         //check handler
-        logger.info("Request URI:"+request.getRequestURI());
+        logger.info("Request URI:" + request.getRequestURI());
         if (!(handler instanceof HandlerMethod method)) {
             logger.warn("Handler object is not HandlerMethod!");
             return result;
@@ -102,12 +102,12 @@ public class AccountAuthorityVerifier implements HandlerInterceptor {
         }
 
         //Get the key and check it
-        if(authority==null) {
-            if(publicRestful) return true;
+        if (authority == null) {
+            if (publicRestful) return true;
             else throw new AuthorityFailureException();
         }
         String curKey = authority.verifierKey();
-        if (!curKey.isBlank()&&(!key.equalsIgnoreCase(curKey))) return true;
+        if (!curKey.isBlank() && (!key.equalsIgnoreCase(curKey))) return true;
 
         //if must login
         Authority.Account account = accountHandler.get(request);
@@ -159,6 +159,7 @@ public class AccountAuthorityVerifier implements HandlerInterceptor {
         //Bind
         bindLoginAccount(request, method);
         //Record the account is login
+        request.setAttribute(loginAccountBindName, account);
         request.setAttribute(ATTRIBUTE_IS_LOGIN, account != null);
 
         return true;
