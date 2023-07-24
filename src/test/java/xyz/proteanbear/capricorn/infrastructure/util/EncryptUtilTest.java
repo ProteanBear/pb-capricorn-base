@@ -50,4 +50,13 @@ public class EncryptUtilTest {
         System.out.println("SM4解密后：" + decrypted);
         Assertions.assertEquals(sourceString, decrypted);
     }
+
+    /**
+     * SM4解密测试
+     */
+    @Test
+    public void testDecryptBySM4(){
+        String str="7bf7b1d510ffb7083a7ff36d5172f0c706958c9904bc1b11cbe266498ebc242e";
+        System.out.println("解密结果："+EncryptUtil.decryptBySM4("26C751A43548413207993D89BA7D3393",str));
+    }
 }
