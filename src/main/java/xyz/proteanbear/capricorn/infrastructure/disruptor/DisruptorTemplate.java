@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Lazy;
@@ -31,6 +32,7 @@ import java.util.*;
 @Component
 @Scope("singleton")
 @Lazy
+@ConditionalOnClass(EventFactory.class)
 public class DisruptorTemplate implements ApplicationContextAware {
     /**
      * 默认缓存区大小
@@ -69,10 +71,8 @@ public class DisruptorTemplate implements ApplicationContextAware {
         }
 
         public <T> Optional<T> getData(Class<T> clazz) throws JsonProcessingException {
-            ObjectMapper objectMapper=new ObjectMapper();
-            return data != null && !data.isBlank()
-                    ? Optional.of(objectMapper.readValue(data, clazz))
-                    : Optional.empty();
+            ObjectMapper objectMapper = new ObjectMapper();
+            return data != null && !data.isBlank() ? Optional.of(objectMapper.readValue(data, clazz)) : Optional.empty();
         }
 
         public void setData(String data) {
@@ -146,22 +146,17 @@ public class DisruptorTemplate implements ApplicationContextAware {
 
         //载入并登记消费者
         int registerNumber = this.loadProcessors();
-        logger.info("Successfully initialized the corresponding topics of the component" +
-                ", " + topicHandlerMap.keySet().size() + " topics and " + registerNumber + " consumers.");
+        logger.info("Successfully initialized the corresponding topics of the component" + ", " + topicHandlerMap.keySet().size() + " topics and " + registerNumber + " consumers.");
 
         //创建事件分发者
         logger.info("Start creating message queue.");
         int bufferSize = Optional.ofNullable(this.bufferSize).orElse(defaultBufferSize);
-        disruptor = new Disruptor<>(new TopicEventFactory(), bufferSize,
-                new CustomizableThreadFactory("disruptor-executor-"),
-                ProducerType.SINGLE, new YieldingWaitStrategy()
-        );
+        disruptor = new Disruptor<>(new TopicEventFactory(), bufferSize, new CustomizableThreadFactory("disruptor-executor-"), ProducerType.SINGLE, new YieldingWaitStrategy());
         //设置消费者
         //依据话题调用对应的订阅者进行处理
         disruptor.handleEventsWith((topicEvent, sequence, endOfBatch) -> {
             if (!topicHandlerMap.containsKey(topicEvent.getTopic())) return;
-            topicHandlerMap.getOrDefault(topicEvent.getTopic(), List.of())
-                    .forEach(handler -> handler.onReceive(topicEvent));
+            topicHandlerMap.getOrDefault(topicEvent.getTopic(), List.of()).forEach(handler -> handler.onReceive(topicEvent));
         });
         //开启
         logger.info("Disruptor Message Queue is starting.");
@@ -180,7 +175,7 @@ public class DisruptorTemplate implements ApplicationContextAware {
     public <T> void publish(String topic, T data) throws JsonProcessingException {
         if (this.disruptor == null) return;
         RingBuffer<TopicEvent> ringBuffer = disruptor.getRingBuffer();
-        ObjectMapper objectMapper=new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();
         ringBuffer.publishEvent(translator, topic, objectMapper.writeValueAsString(data));
     }
 
@@ -204,8 +199,7 @@ public class DisruptorTemplate implements ApplicationContextAware {
         //从Spring上下文中获取使用消费者注解的组件
         Map<String, ?> handlerObjectMap = applicationContext.getBeansWithAnnotation(DataHandlerTopic.class);
         for (Map.Entry<String, ?> stringEntry : handlerObjectMap.entrySet()) {
-            DataHandlerTopic handlerTopic = applicationContext
-                    .findAnnotationOnBean(stringEntry.getKey(), DataHandlerTopic.class);
+            DataHandlerTopic handlerTopic = applicationContext.findAnnotationOnBean(stringEntry.getKey(), DataHandlerTopic.class);
             if (handlerTopic == null) continue;
             Object handlerObject = stringEntry.getValue();
             //获取指定的频道对应的组件列表，并增加当前的消费者对应
@@ -220,6 +214,6 @@ public class DisruptorTemplate implements ApplicationContextAware {
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext=applicationContext;
+        this.applicationContext = applicationContext;
     }
 }
