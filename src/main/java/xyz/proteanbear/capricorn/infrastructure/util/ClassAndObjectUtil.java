@@ -1,5 +1,10 @@
 package xyz.proteanbear.capricorn.infrastructure.util;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Tools:Class and object related tools
  *
@@ -102,5 +107,21 @@ public class ClassAndObjectUtil {
             }
         }
         return result;
+    }
+
+    /**
+     * Get all fields in the specified class
+     *
+     * @param atClass the specified class
+     * @return field list
+     */
+    public static List<Field> getFields(Class<?> atClass) {
+        List<Field> fieldList = new ArrayList<>(16);
+        while (atClass != null) {
+            Field[] fields = atClass.getDeclaredFields();
+            fieldList.addAll(Arrays.asList(fields));
+            atClass = atClass.getSuperclass();
+        }
+        return fieldList;
     }
 }
