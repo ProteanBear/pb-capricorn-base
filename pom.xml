@@ -5,13 +5,13 @@
     <parent>
         <artifactId>pb-capricorn-parent</artifactId>
         <groupId>xyz.proteanbear</groupId>
-        <version>1.2.4</version>
+        <version>1.2.5</version>
         <relativePath>../pb-capricorn-parent/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>pb-capricorn-base</artifactId>
-    <version>1.2.4</version>
+    <version>1.2.5</version>
     <packaging>jar</packaging>
     <description>Capricorn综合应用技术服务平台：基础通用模块项目，包括项目使用的基础库等内容。</description>
 
