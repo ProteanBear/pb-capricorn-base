@@ -102,6 +102,21 @@ public class Authority {
          * 设置Token
          */
         void setToken(String token);
+
+        /**
+         * 获取Token有效时间（分钟）
+         */
+        default Long getExpired() {
+            return 60L;
+        }
+
+        /**
+         * 设置Token有效时间（分钟）
+         *
+         * @param minutes 分钟数
+         */
+        default void setExpired(Long minutes) {
+        }
     }
 
     /**
