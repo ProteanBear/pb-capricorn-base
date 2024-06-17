@@ -7,10 +7,17 @@ import org.bouncycastle.crypto.CryptoException;
 import org.bouncycastle.crypto.InvalidCipherTextException;
 import org.bouncycastle.crypto.engines.SM2Engine;
 import org.bouncycastle.crypto.generators.ECKeyPairGenerator;
-import org.bouncycastle.crypto.params.*;
+import org.bouncycastle.crypto.params.ParametersWithID;
+import org.bouncycastle.crypto.params.ECDomainParameters;
+import org.bouncycastle.crypto.params.ECKeyGenerationParameters;
+import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
+import org.bouncycastle.crypto.params.ECPublicKeyParameters;
+import org.bouncycastle.crypto.params.ParametersWithRandom;
 import org.bouncycastle.crypto.signers.SM2Signer;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Hex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -27,6 +34,8 @@ import java.security.*;
  * @author 马强
  */
 public class EncryptUtil {
+    private static final Logger logger = LoggerFactory.getLogger(EncryptUtil.class);
+
     /**
      * SM2算法名称
      */
@@ -63,7 +72,7 @@ public class EncryptUtil {
             }
             return stringBuilder.toString();
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }
@@ -89,7 +98,7 @@ public class EncryptUtil {
                     ((ECPrivateKeyParameters) keyPair.getPrivate()).getD().toString(16)
             );
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }
@@ -120,7 +129,7 @@ public class EncryptUtil {
         try {
             return Hex.toHexString(sm2Engine.processBlock(strData, 0, strData.length));
         } catch (InvalidCipherTextException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }
@@ -150,7 +159,7 @@ public class EncryptUtil {
         try {
             return new String(sm2Engine.processBlock(encrypted, 0, encrypted.length));
         } catch (InvalidCipherTextException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }
@@ -185,7 +194,7 @@ public class EncryptUtil {
         try {
             return Hex.toHexString(signer.generateSignature());
         } catch (CryptoException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }
@@ -241,7 +250,7 @@ public class EncryptUtil {
 
         } catch (NoSuchAlgorithmException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException |
                  NoSuchProviderException | NoSuchPaddingException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }
@@ -266,7 +275,7 @@ public class EncryptUtil {
 
         } catch (NoSuchAlgorithmException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException |
                  NoSuchProviderException | NoSuchPaddingException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }
