@@ -36,7 +36,7 @@ public class PersonnelIdCardUtil {
     public static boolean validate(String number) {
         boolean result;
         assert number != null;
-        assert !"".equals(number.trim());
+        assert !number.trim().isEmpty();
         if (number.length() != 15 && number.length() != 18) return false;
 
         //修正号码：如果为15位，转换为18位
@@ -71,7 +71,7 @@ public class PersonnelIdCardUtil {
      */
     public static Optional<IdCardInfo> infoOf(String number) {
         assert number != null;
-        assert !"".equals(number.trim());
+        assert !number.trim().isEmpty();
         if (!validate(number)) return Optional.empty();
 
         //取出生日
@@ -96,7 +96,7 @@ public class PersonnelIdCardUtil {
      */
     private static String convertToNewCardNumber(String number) {
         assert number != null;
-        assert !"".equals(number.trim());
+        assert !number.trim().isEmpty();
 
         //已经是18位，直接返回
         int targetLength = 18;
