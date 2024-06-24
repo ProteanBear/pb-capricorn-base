@@ -47,7 +47,7 @@ public class RegularExpressionTest {
     }
 
     /**
-     * 测试密码（必须包含字母和数字，长度6~18位）
+     * 测试密码（密码至少一个小写字母、一个大写字母、一个数字、一个特殊字符，且长度在8~20之间。）
      */
     @Test
     public void testPassword(){
@@ -55,9 +55,11 @@ public class RegularExpressionTest {
         Assertions.assertFalse(Pattern.matches(RegularExpression.Password,"123456"));
         Assertions.assertFalse(Pattern.matches(RegularExpression.Password,"compare"));
         Assertions.assertFalse(Pattern.matches(RegularExpression.Password,"abCdE1234567890feb5"));
-        Assertions.assertTrue(Pattern.matches(RegularExpression.Password,"a123456"));
-        Assertions.assertTrue(Pattern.matches(RegularExpression.Password,"1A23456"));
-        Assertions.assertTrue(Pattern.matches(RegularExpression.Password,"Aa123456&%$"));
+        Assertions.assertFalse(Pattern.matches(RegularExpression.Password,"a123456"));
+        Assertions.assertFalse(Pattern.matches(RegularExpression.Password,"1A23456!"));
+        Assertions.assertFalse(Pattern.matches(RegularExpression.Password,"1Aa23456"));
+        Assertions.assertFalse(Pattern.matches(RegularExpression.Password,"Aa123456&%$Aa123456&%$"));
+        Assertions.assertTrue(Pattern.matches(RegularExpression.Password,"Aa123456&%$*^"));
     }
 
     /**
