@@ -52,9 +52,14 @@ public class AccountAuthorityVerifier implements HandlerInterceptor {
     private Authority.AccountHandler accountHandler;
 
     /**
-     * 拦截器标识
+     * Interceptor identification
      */
     private String key;
+
+    /**
+     * Days for timed password updates
+     */
+    private Integer passExpiredDays;
 
     /**
      * Get the annotation of method and verify it authority
@@ -67,11 +72,11 @@ public class AccountAuthorityVerifier implements HandlerInterceptor {
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-            throws AuthorityFailureException, AuthorityAccountNotExistException {
+            throws AuthorityFailureException, AuthorityAccountNotExistException, AuthorityAccountPasswordExpiredException {
         boolean result = publicRestful;
 
         //check handler
-        logger.info("Request URI:" + request.getRequestURI());
+        logger.info("Request URI:{}", request.getRequestURI());
         if (!(handler instanceof HandlerMethod method)) {
             logger.warn("Handler object is not HandlerMethod!");
             return result;
@@ -109,7 +114,7 @@ public class AccountAuthorityVerifier implements HandlerInterceptor {
         String curKey = authority.verifierKey();
         if (!curKey.isBlank() && (!key.equalsIgnoreCase(curKey))) return true;
 
-        //if must login
+        //if it must log in
         Authority.Account account = accountHandler.get(request);
         if (Objects.requireNonNull(authority).mustLogin()) {
             if (account == null) throw new AuthorityAccountNotExistException();
@@ -151,6 +156,13 @@ public class AccountAuthorityVerifier implements HandlerInterceptor {
 
             //Custom check
             if (result) result = account.ok(authority.accountAuthKey());
+
+            //Check password expiration
+            if (result
+                    && authority.passExpiredIntercept()
+                    && account.mustChangePassword(passExpiredDays == null ? 0 : passExpiredDays)) {
+                throw new AuthorityAccountPasswordExpiredException();
+            }
 
             //Handle result
             if (!result) throw new AuthorityFailureException(authority.message());
@@ -204,6 +216,13 @@ public class AccountAuthorityVerifier implements HandlerInterceptor {
      */
     public void setKey(String key) {
         this.key = key;
+    }
+
+    /**
+     * @param passExpiredDays - Days for timed password updates
+     */
+    public void setPassExpiredDays(Integer passExpiredDays) {
+        this.passExpiredDays = passExpiredDays;
     }
 
     /**

@@ -68,12 +68,26 @@ public class Authority {
          * 多拦截器模式：指定使用的拦截器类名（拦截器中会判断当前键名，不匹配则跳过）
          */
         String verifierKey() default "";
+
+        /**
+         * 是否进行修改密码拦截
+         */
+        boolean passExpiredIntercept() default true;
     }
 
     /**
      * 账户类接口，默认实现；并可序列化
      */
     public interface Account extends Serializable {
+        /**
+         * 检测账户配置是否需要重新设置密码，用于支持登录密码定期修改
+         *
+         * @param days - 定期修改的天数
+         */
+        default boolean mustChangePassword(int days) {
+            return false;
+        }
+
         /**
          * 检查账户配置是否通过鉴权，通过鉴权即可以使用对应的接口
          *
