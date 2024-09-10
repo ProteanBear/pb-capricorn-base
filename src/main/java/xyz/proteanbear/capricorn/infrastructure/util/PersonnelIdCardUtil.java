@@ -127,41 +127,24 @@ public class PersonnelIdCardUtil {
 
     /**
      * 身份证内的相关信息
+     *
+     * @param birthday 生日
+     * @param age      年龄
+     * @param gender   性别，0-女、1-男
      */
-    public static class IdCardInfo implements Serializable {
-        /**
-         * 生日
-         */
-        @JsonSerialize(using = LocalDateSerializer.class)
-        @JsonDeserialize(using = LocalDateDeserializer.class)
-        private final LocalDate birthday;
-
-        /**
-         * 年龄
-         */
-        private final int age;
-
-        /**
-         * 性别，0-女、1-男
-         */
-        private final int gender;
-
+    public record IdCardInfo(
+            @JsonSerialize(using = LocalDateSerializer.class) @JsonDeserialize(using = LocalDateDeserializer.class) LocalDate birthday,
+            int age, int gender
+    ) implements Serializable {
         public IdCardInfo(LocalDate birthday, int age, int gender) {
             this.birthday = birthday;
             this.age = age;
             this.gender = gender;
         }
 
-        public LocalDate getBirthday() {
+        @Override
+        public LocalDate birthday() {
             return birthday;
-        }
-
-        public int getAge() {
-            return age;
-        }
-
-        public int getGender() {
-            return gender;
         }
 
         public boolean isMan() {

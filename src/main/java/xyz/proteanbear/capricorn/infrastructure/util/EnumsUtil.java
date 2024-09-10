@@ -12,15 +12,16 @@ public class EnumsUtil {
     /**
      * 从全部枚举值中获取当前值对应的枚举，如果没有则抛出异常
      *
-     * @param enums        全部枚举值
-     * @param valueGetter  识别值字段获取方法
-     * @param <K>          识别值类型
-     * @param <E>          枚举值类型
+     * @param enums       全部枚举值
+     * @param valueGetter 识别值字段获取方法
+     * @param <K>         识别值类型
+     * @param <E>         枚举值类型
      * @return 值对应的枚举，如果没有则抛出异常
+     * @throws IllegalArgumentException IllegalArgumentException
      */
-    public static <K, E extends Enum<E>> E valueOf(K value, E[] enums, ValueGetter<K,E> valueGetter) throws EnumsValueNotExistException{
-        Map<K,E> dictionary=dictionary(enums, valueGetter);
-        if(!dictionary.containsKey(value)) throw new EnumsValueNotExistException();
+    public static <K, E extends Enum<E>> E valueOf(K value, E[] enums, ValueGetter<K, E> valueGetter) throws EnumsValueNotExistException {
+        Map<K, E> dictionary = dictionary(enums, valueGetter);
+        if (!dictionary.containsKey(value)) throw new EnumsValueNotExistException();
         return dictionary.get(value);
     }
 
@@ -34,8 +35,8 @@ public class EnumsUtil {
      * @param <E>          枚举值类型
      * @return 值对应的枚举，如果没有则使用默认值
      */
-    public static <K, E extends Enum<E>> E valueOf(K value, E[] enums, ValueGetter<K,E> valueGetter, E defaultValue) {
-        return dictionary(enums, valueGetter).getOrDefault(value,defaultValue);
+    public static <K, E extends Enum<E>> E valueOf(K value, E[] enums, ValueGetter<K, E> valueGetter, E defaultValue) {
+        return dictionary(enums, valueGetter).getOrDefault(value, defaultValue);
     }
 
     /**
@@ -47,7 +48,7 @@ public class EnumsUtil {
      * @param <E>         枚举值类型
      * @return 返回字典内容为识别值对应枚举值
      */
-    public static <K, E extends Enum<E>> Map<K, E> dictionary(E[] enums, ValueGetter<K,E> valueGetter) {
+    public static <K, E extends Enum<E>> Map<K, E> dictionary(E[] enums, ValueGetter<K, E> valueGetter) {
         Map<K, E> result = new HashMap<>();
         for (E anEnum : enums) {
             result.put(valueGetter.getValue(anEnum), anEnum);
@@ -58,7 +59,7 @@ public class EnumsUtil {
     /**
      * 枚举值获取键名接口
      */
-    public interface ValueGetter<K,E extends Enum<E>> {
+    public interface ValueGetter<K, E extends Enum<E>> {
         /**
          * 返回键名对象
          */
@@ -68,7 +69,7 @@ public class EnumsUtil {
     /**
      * 枚举值不存在异常
      */
-    public static class EnumsValueNotExistException extends Exception{
+    public static class EnumsValueNotExistException extends Exception {
         public EnumsValueNotExistException() {
             super("Enumeration value does not exist.");
         }

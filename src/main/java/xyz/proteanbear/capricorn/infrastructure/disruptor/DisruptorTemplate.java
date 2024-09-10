@@ -18,6 +18,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
+import org.springframework.lang.NonNull;
 import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 import org.springframework.stereotype.Component;
 
@@ -146,7 +147,7 @@ public class DisruptorTemplate implements ApplicationContextAware {
 
         //载入并登记消费者
         int registerNumber = this.loadProcessors();
-        logger.info("Successfully initialized the corresponding topics of the component" + ", " + topicHandlerMap.keySet().size() + " topics and " + registerNumber + " consumers.");
+        logger.info("Successfully initialized the corresponding topics of the component, {} topics and {} consumers.", topicHandlerMap.keySet().size(), registerNumber);
 
         //创建事件分发者
         logger.info("Start creating message queue.");
@@ -213,7 +214,7 @@ public class DisruptorTemplate implements ApplicationContextAware {
     }
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
 }

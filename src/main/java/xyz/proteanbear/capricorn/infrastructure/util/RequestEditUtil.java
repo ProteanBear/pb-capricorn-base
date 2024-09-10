@@ -1,6 +1,8 @@
 package xyz.proteanbear.capricorn.infrastructure.util;
 
 import jakarta.servlet.ServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.Map;
  * @author 马强
  */
 public class RequestEditUtil {
+    private static final Logger logger = LoggerFactory.getLogger(RequestEditUtil.class);
+
     /**
      * HttpRequest implementation class private requestField in RequestFacade request
      */
@@ -63,7 +67,7 @@ public class RequestEditUtil {
 
             error = false;
         } catch (ClassNotFoundException | NoSuchFieldException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
             error = true;
         }
     }
@@ -74,6 +78,7 @@ public class RequestEditUtil {
      * @param request request
      * @return a parameter map can edit
      */
+    @SuppressWarnings("unchecked")
     private static Map<String, List<String>> getRequestMapCanEdit(ServletRequest request) {
         try {
             if (error) return null;
@@ -84,7 +89,7 @@ public class RequestEditUtil {
             Object parameterObject = parametersField.get(coyoteRequestObject);
             return (Map<String, List<String>>) paramHashValues.get(parameterObject);
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             return null;
         }
     }
@@ -98,7 +103,7 @@ public class RequestEditUtil {
     public static void put(Map<String, List<String>> parameters, ServletRequest intoRequest) {
         Map<String, List<String>> paramMap = getRequestMapCanEdit(intoRequest);
         if (paramMap != null && parameters != null) {
-            parameters.forEach(paramMap::put);
+            paramMap.putAll(parameters);
         }
     }
 }

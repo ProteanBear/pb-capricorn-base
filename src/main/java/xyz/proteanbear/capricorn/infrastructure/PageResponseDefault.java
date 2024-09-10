@@ -127,7 +127,7 @@ public class PageResponseDefault {
          *
          * @param page 分页内容
          */
-        public static Pagination of(Page<? extends Object> page) {
+        public static Pagination of(Page<?> page) {
             Pagination pagination = new Pagination();
             pagination.setPage(page.getNumber() + 1);
             pagination.setSize(page.getSize());

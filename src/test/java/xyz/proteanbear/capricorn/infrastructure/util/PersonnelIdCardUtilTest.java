@@ -89,8 +89,8 @@ public class PersonnelIdCardUtilTest {
         Optional<PersonnelIdCardUtil.IdCardInfo> info=PersonnelIdCardUtil.infoOf(number);
         Assertions.assertTrue(info.isPresent());
         DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        Assertions.assertEquals(info.get().getBirthday().format(formatter),"1982-06-20");
-        Assertions.assertEquals(info.get().getGender(),1);
+        Assertions.assertEquals(info.get().birthday().format(formatter),"1982-06-20");
+        Assertions.assertEquals(info.get().gender(),1);
 
         try {
             ObjectMapper objectMapper=new ObjectMapper();

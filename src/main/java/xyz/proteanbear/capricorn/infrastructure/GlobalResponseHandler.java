@@ -15,6 +15,7 @@ import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.http.server.ServletServerHttpResponse;
+import org.springframework.lang.NonNull;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 import xyz.proteanbear.capricorn.infrastructure.auth.AccountAuthorityVerifier;
 import xyz.proteanbear.capricorn.infrastructure.auth.Authority;
@@ -59,7 +60,7 @@ public abstract class GlobalResponseHandler implements ResponseBodyAdvice<Object
      * @return Does it support @ResponseBody capture
      */
     @Override
-    public boolean supports(MethodParameter methodParameter, Class<? extends HttpMessageConverter<?>> aClass) {
+    public boolean supports(@NonNull MethodParameter methodParameter, Class<? extends HttpMessageConverter<?>> aClass) {
         return true;
     }
 
@@ -78,10 +79,10 @@ public abstract class GlobalResponseHandler implements ResponseBodyAdvice<Object
     public Object beforeBodyWrite(
             Object data,
             MethodParameter methodParameter,
-            MediaType mediaType,
-            Class<? extends HttpMessageConverter<?>> aClass,
-            ServerHttpRequest serverHttpRequest,
-            ServerHttpResponse serverHttpResponse) {
+            @NonNull MediaType mediaType,
+            @NonNull Class<? extends HttpMessageConverter<?>> aClass,
+            @NonNull ServerHttpRequest serverHttpRequest,
+            @NonNull ServerHttpResponse serverHttpResponse) {
 
         //Store the data for the method with authority annotation AutoStore
         Class<?> methodClass = methodParameter.getContainingClass();

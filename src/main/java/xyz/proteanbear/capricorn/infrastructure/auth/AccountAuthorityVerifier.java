@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.method.HandlerMethod;
@@ -71,7 +72,7 @@ public class AccountAuthorityVerifier implements HandlerInterceptor {
      * @throws AuthorityFailureException If one parameter is wrong,throw exception
      */
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+    public boolean preHandle(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler)
             throws AuthorityFailureException, AuthorityAccountNotExistException, AuthorityAccountPasswordExpiredException {
         boolean result = publicRestful;
 

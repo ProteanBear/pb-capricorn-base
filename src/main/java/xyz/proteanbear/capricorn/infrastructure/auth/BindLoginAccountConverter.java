@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.NonNull;
 
 /**
  * Read and bind login user to method parameters
@@ -37,7 +38,7 @@ public class BindLoginAccountConverter implements Converter<String[], Authority.
      * @return login account object
      */
     @Override
-    public Authority.Account convert(String[] strings) {
+    public Authority.Account convert(@NonNull String[] strings) {
         if (accountHandler == null || strings.length < 2) return null;
 
         //Get account object by account handler
