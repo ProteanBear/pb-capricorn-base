@@ -74,4 +74,16 @@ public class RegularExpressionTest {
         Assertions.assertFalse(Pattern.matches(RegularExpression.Date,"2021-02-29"));
         Assertions.assertTrue(Pattern.matches(RegularExpression.Date,"2020-02-29"));
     }
+
+    /**
+     * 测试时间
+     */
+    @Test
+    public void testTime(){
+        Assertions.assertFalse(Pattern.matches(RegularExpression.Time,"1234"));
+        Assertions.assertFalse(Pattern.matches(RegularExpression.Time,"34:12"));
+        Assertions.assertFalse(Pattern.matches(RegularExpression.Time,"23:89"));
+        Assertions.assertFalse(Pattern.matches(RegularExpression.Time,"10:456"));
+        Assertions.assertTrue(Pattern.matches(RegularExpression.Time,"10:45"));
+    }
 }

@@ -60,7 +60,7 @@ public class EnumsUtilTest {
     /**
      * 测试枚举类
      */
-    public static enum TestEnum {
+    public enum TestEnum {
         A("A", "test A"),
         B("B", "test B"),
         T("T", "default");

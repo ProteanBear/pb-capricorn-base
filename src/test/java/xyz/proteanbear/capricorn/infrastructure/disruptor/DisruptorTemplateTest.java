@@ -16,6 +16,6 @@ public class DisruptorTemplateTest {
         DisruptorTemplate template=new DisruptorTemplate();
         template.register(topic,new TestTopicEventHandler()).start();
         template.publish("TEST_TOPIC_EVENT",new PublishTestEvent("DisruptorTemplateTest"));
-        Thread.sleep(5000);
+        Thread.sleep(2000);
     }
 }
